@@ -45,7 +45,7 @@ const Analistas = () => {
     localStorage.setItem("perfilAtivo", selected);
     navigateToProfile(selected);
   };
-  
+
 
   const todosUsuarios = JSON.parse(localStorage.getItem("usuarios") || "[]");
 
@@ -55,16 +55,16 @@ const Analistas = () => {
     const escaloesDoAtleta = Array.isArray(u.escalão)
       ? u.escalão
       : typeof u.escalão === "string"
-      ? [u.escalão]
-      : [];
-  
+        ? [u.escalão]
+        : [];
+
     return (
       u.perfil === "Atleta" &&
       u.modalidade === dadosBase.modalidade &&
       escaloesDoAtleta.some((e: string) => dadosBase.escaloes.includes(e))
     );
   });
-  
+
 
   const [ultimaInsercao, setUltimaInsercao] = useState<any[]>([]);
   const [modalAberto, setModalAberto] = useState(false);
@@ -77,16 +77,16 @@ const Analistas = () => {
   const handleEliminar = (index: number) => {
     const confirm = window.confirm("Tens a certeza que queres eliminar esta estatística?");
     if (!confirm) return;
-  
+
     const atualizadas = [...ultimaInsercao];
     atualizadas.splice(index, 1);
     setUltimaInsercao(atualizadas);
     localStorage.setItem("estatisticas_jogos", JSON.stringify(atualizadas));
   };
-  
+
   const handleEditar = (index: number) => {
     const item = ultimaInsercao[index];
-  
+
     setDadosBase({
       adversario: item.adversario,
       data: item.data,
@@ -95,17 +95,17 @@ const Analistas = () => {
       escaloes: item.escaloes,
       competicao: item.competicao ?? "",
     });
-  
+
     setEstatisticas({
       jogadoresCampo: item.jogadores?.jogadoresCampo || [],
       guardaRedes: item.jogadores?.guardaRedes || [],
     });
-  
+
     setEditIndex(index);
     setModalAberto(true);
   };
-  
-  
+
+
 
 
   useEffect(() => {
@@ -130,27 +130,27 @@ const Analistas = () => {
 
   useEffect(() => {
     if (!dadosBase.modalidade || dadosBase.escaloes.length === 0) return;
-  
+
     const filtradas = competicoes.filter((comp: any) => {
       const compModalidade = comp.modalidade?.trim().toLowerCase();
       const compEscalao = comp.escalao?.trim().toLowerCase();
-  
+
       return (
         compModalidade === dadosBase.modalidade.trim().toLowerCase() &&
         dadosBase.escaloes.some((esc) => esc.trim().toLowerCase() === compEscalao)
       );
     });
-  
+
     setCompeticoesFiltradas(filtradas);
   }, [dadosBase.modalidade, dadosBase.escaloes, competicoes]);
-  
-  
-  
-  
+
+
+
+
 
   const handleChange = (campo: string, valor: any) => {
     setDadosBase(prev => ({ ...prev, [campo]: valor }));
-  };  
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -158,20 +158,20 @@ const Analistas = () => {
         <div className="flex justify-between items-center border-b pb-4">
           <img src="/logo_clube.png" alt="Logo" className="h-10" />
           <div className="flex items-center space-x-3">
-          <div className="flex flex-col items-center text-center">
-  <span className="text-sm text-gray-700 font-medium">{user?.nome}</span>
-  <select
-    value={perfilAtivo ?? ""}
-    onChange={handlePerfilChange}
-    className="text-xs text-gray-500 bg-transparent border-none outline-none cursor-pointer mt-1"
-  >
-    {user?.perfil.map((perfil, idx) => (
-      <option key={idx} value={perfil}>
-        {perfil}
-      </option>
-    ))}
-  </select>
-</div>
+            <div className="flex flex-col items-center text-center">
+              <span className="text-sm text-gray-700 font-medium">{user?.nome}</span>
+              <select
+                value={perfilAtivo ?? ""}
+                onChange={handlePerfilChange}
+                className="text-xs text-gray-500 bg-transparent border-none outline-none cursor-pointer mt-1"
+              >
+                {user?.perfil.map((perfil, idx) => (
+                  <option key={idx} value={perfil}>
+                    {perfil}
+                  </option>
+                ))}
+              </select>
+            </div>
 
             <img src={user?.foto ?? "/avatar.png"} alt="Foto" className="w-10 h-10 rounded-full object-cover border" />
             <button
@@ -195,7 +195,18 @@ const Analistas = () => {
           >
             + Nova Estatística
           </button>
+
+          {/* Novo Botão para Análise 2ª Divisão */}
+          <button
+            onClick={() => navigate("/analise-2-divisao")}
+            className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+          >
+            Análise 2ª Divisão
+          </button>
+
         </div>
+
+
 
         <div className="bg-white p-4 rounded shadow">
           {ultimaInsercao.length === 0 ? (
@@ -203,30 +214,30 @@ const Analistas = () => {
           ) : (
             <ul className="space-y-2">
               {ultimaInsercao.map((e, idx) => (
-  <li key={idx} className="p-2 border rounded flex justify-between items-center">
-    <div>
-      <strong>{e.modalidade} - {Array.isArray(e.escaloes) ? e.escaloes.join(", ") : e.escaloes}</strong> vs <strong>{e.adversario}</strong> em {new Date(e.data).toLocaleDateString()}
-      <div className="text-xs text-gray-500">Inserido em {new Date(e.dataHora).toLocaleString()}</div>
-    </div>
-    <div className="flex gap-2">
-    <button
-  onClick={() => handleEditar(idx)}
-  className="text-gray-400 hover:text-blue-800 p-1"
-  title="Editar"
->
-  <Edit size={18} />
-</button>
-<button
-  onClick={() => handleEliminar(idx)}
-  className="text-gray-400 hover:text-red-800 p-1"
-  title="Eliminar"
->
-  <Trash2 size={18} />
-</button>
+                <li key={idx} className="p-2 border rounded flex justify-between items-center">
+                  <div>
+                    <strong>{e.modalidade} - {Array.isArray(e.escaloes) ? e.escaloes.join(", ") : e.escaloes}</strong> vs <strong>{e.adversario}</strong> em {new Date(e.data).toLocaleDateString()}
+                    <div className="text-xs text-gray-500">Inserido em {new Date(e.dataHora).toLocaleString()}</div>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleEditar(idx)}
+                      className="text-gray-400 hover:text-blue-800 p-1"
+                      title="Editar"
+                    >
+                      <Edit size={18} />
+                    </button>
+                    <button
+                      onClick={() => handleEliminar(idx)}
+                      className="text-gray-400 hover:text-red-800 p-1"
+                      title="Eliminar"
+                    >
+                      <Trash2 size={18} />
+                    </button>
 
-    </div>
-  </li>
-))}
+                  </div>
+                </li>
+              ))}
 
             </ul>
           )}
@@ -239,166 +250,166 @@ const Analistas = () => {
             <h2 className="text-xl font-bold text-gray-800">Nova Estatística</h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-stretch">
-  <input
-    type="text"
-    placeholder="Adversário"
-    value={dadosBase.adversario}
-    onChange={(e) => handleChange('adversario', e.target.value)}
-    className="border p-2 rounded h-full"
-  />
-  <input
-    type="date"
-    value={dadosBase.data}
-    onChange={(e) => handleChange('data', e.target.value)}
-    className="border p-2 rounded h-full"
-  />
-  <select
-  value={dadosBase.local}
-  onChange={(e) => handleChange('local', e.target.value)}
-  className="border p-2 rounded h-full"
-  required
->
-  <option value="" disabled>
-    Selecionar Local
-  </option>
-  <option value="Casa">Casa</option>
-  <option value="Fora">Fora</option>
-</select>
+              <input
+                type="text"
+                placeholder="Adversário"
+                value={dadosBase.adversario}
+                onChange={(e) => handleChange('adversario', e.target.value)}
+                className="border p-2 rounded h-full"
+              />
+              <input
+                type="date"
+                value={dadosBase.data}
+                onChange={(e) => handleChange('data', e.target.value)}
+                className="border p-2 rounded h-full"
+              />
+              <select
+                value={dadosBase.local}
+                onChange={(e) => handleChange('local', e.target.value)}
+                className="border p-2 rounded h-full"
+                required
+              >
+                <option value="" disabled>
+                  Selecionar Local
+                </option>
+                <option value="Casa">Casa</option>
+                <option value="Fora">Fora</option>
+              </select>
 
-  <select
-    value={dadosBase.modalidade}
-    onChange={(e) => handleChange('modalidade', e.target.value)}
-    className="border p-2 rounded h-full"
-  >
-    <option value="">Selecionar Modalidade</option>
-    {modalidades.map((m: any) => (
-      <option key={m.nome} value={m.nome}>{m.nome}</option>
-    ))}
-  </select>
+              <select
+                value={dadosBase.modalidade}
+                onChange={(e) => handleChange('modalidade', e.target.value)}
+                className="border p-2 rounded h-full"
+              >
+                <option value="">Selecionar Modalidade</option>
+                {modalidades.map((m: any) => (
+                  <option key={m.nome} value={m.nome}>{m.nome}</option>
+                ))}
+              </select>
 
-  {/* Competição */}
-  <select
-    value={dadosBase.competicao}
-    onChange={(e) => handleChange("competicao", e.target.value)}
-    className="border p-2 rounded h-full"
-  >
-    <option value="">Selecionar Competição</option>
-    {competicoesFiltradas.map((comp: any) => (
-      <option key={comp.id} value={comp.nome}>
-        {comp.nome}
-      </option>
-    ))}
-  </select>
+              {/* Competição */}
+              <select
+                value={dadosBase.competicao}
+                onChange={(e) => handleChange("competicao", e.target.value)}
+                className="border p-2 rounded h-full"
+              >
+                <option value="">Selecionar Competição</option>
+                {competicoesFiltradas.map((comp: any) => (
+                  <option key={comp.id} value={comp.nome}>
+                    {comp.nome}
+                  </option>
+                ))}
+              </select>
 
-  {/* Escalões dropdown (sem o label) */}
-  <div className="relative">
-    <button
-      type="button"
-      onClick={() => setDropdownAberto((prev) => !prev)}
-      className="w-full border p-2 rounded flex justify-between items-center h-full"
-    >
-      {dadosBase.escaloes.length > 0
-        ? dadosBase.escaloes.join(", ")
-        : "Selecionar Escalões"}
-      <span className="ml-2">▾</span>
-    </button>
+              {/* Escalões dropdown (sem o label) */}
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setDropdownAberto((prev) => !prev)}
+                  className="w-full border p-2 rounded flex justify-between items-center h-full"
+                >
+                  {dadosBase.escaloes.length > 0
+                    ? dadosBase.escaloes.join(", ")
+                    : "Selecionar Escalões"}
+                  <span className="ml-2">▾</span>
+                </button>
 
-    {dropdownAberto && (
-      <div className="absolute bg-white border rounded shadow-lg mt-1 w-full z-10 max-h-60 overflow-y-auto">
-        {escaloes.map((esc: string) => (
-          <label key={esc} className="block px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2 text-sm">
-            <input
-              type="checkbox"
-              checked={dadosBase.escaloes.includes(esc)}
-              onChange={() => {
-                const atualizados = dadosBase.escaloes.includes(esc)
-                  ? dadosBase.escaloes.filter((e) => e !== esc)
-                  : [...dadosBase.escaloes, esc];
-                setDadosBase({ ...dadosBase, escaloes: atualizados });
-              }}
-            />
-            {esc}
-          </label>
-        ))}
-      </div>
-    )}
-  </div>
-</div>
-{/* Botão de Cancelar fora do grid */}
-<div className="text-right pt-4">
-        <button
-          onClick={() => setModalAberto(false)}
-          className="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800"
-        >
-          Cancelar
-        </button>
-      </div>
+                {dropdownAberto && (
+                  <div className="absolute bg-white border rounded shadow-lg mt-1 w-full z-10 max-h-60 overflow-y-auto">
+                    {escaloes.map((esc: string) => (
+                      <label key={esc} className="block px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2 text-sm">
+                        <input
+                          type="checkbox"
+                          checked={dadosBase.escaloes.includes(esc)}
+                          onChange={() => {
+                            const atualizados = dadosBase.escaloes.includes(esc)
+                              ? dadosBase.escaloes.filter((e) => e !== esc)
+                              : [...dadosBase.escaloes, esc];
+                            setDadosBase({ ...dadosBase, escaloes: atualizados });
+                          }}
+                        />
+                        {esc}
+                      </label>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+            {/* Botão de Cancelar fora do grid */}
+            <div className="text-right pt-4">
+              <button
+                onClick={() => setModalAberto(false)}
+                className="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800"
+              >
+                Cancelar
+              </button>
+            </div>
 
 
             {dadosBase.modalidade === "Hóquei em Patins" && (
-  <EstatisticasHoquei
-  jogadoresDisponiveis={jogadoresDoEscalao}
-  estatisticasIniciais={estatisticas} // 👈 importante!
-  onCancelar={() => {
-    setModalAberto(false);
-    setEditIndex(null);
-    setEstatisticas(null);
-  }}
-  onGuardar={(estatisticas: any) => {
-    const novaEntrada = {
-      ...dadosBase,
-      jogadores: estatisticas,
-      dataHora: new Date().toISOString(),
-    };
+              <EstatisticasHoquei
+                jogadoresDisponiveis={jogadoresDoEscalao}
+                estatisticasIniciais={estatisticas} // 👈 importante!
+                onCancelar={() => {
+                  setModalAberto(false);
+                  setEditIndex(null);
+                  setEstatisticas(null);
+                }}
+                onGuardar={(estatisticas: any) => {
+                  const novaEntrada = {
+                    ...dadosBase,
+                    jogadores: estatisticas,
+                    dataHora: new Date().toISOString(),
+                  };
 
-    let atualizadas = [...ultimaInsercao];
-    if (editIndex !== null) {
-      atualizadas[editIndex] = novaEntrada;
-    } else {
-      atualizadas = [novaEntrada, ...atualizadas];
-    }
+                  let atualizadas = [...ultimaInsercao];
+                  if (editIndex !== null) {
+                    atualizadas[editIndex] = novaEntrada;
+                  } else {
+                    atualizadas = [novaEntrada, ...atualizadas];
+                  }
 
-    localStorage.setItem("estatisticas_jogos", JSON.stringify(atualizadas));
-    setUltimaInsercao(atualizadas);
-    setModalAberto(false);
-    setEditIndex(null);
-    setEstatisticas(null);
-  }}
-/>
+                  localStorage.setItem("estatisticas_jogos", JSON.stringify(atualizadas));
+                  setUltimaInsercao(atualizadas);
+                  setModalAberto(false);
+                  setEditIndex(null);
+                  setEstatisticas(null);
+                }}
+              />
 
-)}
+            )}
 
-{dadosBase.modalidade && dadosBase.modalidade !== "Hóquei em Patins" && (
-  <div className="flex justify-end gap-4 pt-4">
-    <button
-      onClick={() => {
-        setModalAberto(false);
-        setEditIndex(null);
-        setEstatisticas(null);
-      }}      
-      className="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800"
-    >
-      Cancelar
-    </button>
-    <button
-      onClick={() => {
-        const novaEntrada = {
-          ...dadosBase,
-          jogadores: [],
-          dataHora: new Date().toISOString(),
-        };
-        const anteriores = JSON.parse(localStorage.getItem("estatisticas_jogos") || "[]");
-        const atualizadas = [novaEntrada, ...anteriores];
-        localStorage.setItem("estatisticas_jogos", JSON.stringify(atualizadas));
-        setUltimaInsercao(atualizadas);
-        setModalAberto(false);
-      }}
-      className="px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700"
-    >
-      Guardar Estatística
-    </button>
-  </div>
-)}
+            {dadosBase.modalidade && dadosBase.modalidade !== "Hóquei em Patins" && (
+              <div className="flex justify-end gap-4 pt-4">
+                <button
+                  onClick={() => {
+                    setModalAberto(false);
+                    setEditIndex(null);
+                    setEstatisticas(null);
+                  }}
+                  className="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={() => {
+                    const novaEntrada = {
+                      ...dadosBase,
+                      jogadores: [],
+                      dataHora: new Date().toISOString(),
+                    };
+                    const anteriores = JSON.parse(localStorage.getItem("estatisticas_jogos") || "[]");
+                    const atualizadas = [novaEntrada, ...anteriores];
+                    localStorage.setItem("estatisticas_jogos", JSON.stringify(atualizadas));
+                    setUltimaInsercao(atualizadas);
+                    setModalAberto(false);
+                  }}
+                  className="px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700"
+                >
+                  Guardar Estatística
+                </button>
+              </div>
+            )}
 
           </div>
         </div>

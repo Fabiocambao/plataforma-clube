@@ -20,16 +20,23 @@ import Fisioterapia from "./pages/Fisioterapia";
 import AnalistasADMIN from "./pages/AnalistasADMIN";
 import Competicoes from "./pages/Competicoes";
 import Preparadores from "./pages/Preparadores";
+import Fisioterapeuta from "./pages/Fisioterapeuta";
+import CoordenadorHoquei from "./pages/CoordenadorHoquei";
+import Analise2Divisao from "./pages/Analise2Divisao";
+import DetalheEquipa from "./pages/DetalheEquipa";
+
 
 function RotasProtegidas() {
   const { loading } = useAuth();
 
-  if (loading) return null; // ou <Spinner /> se quiseres mostrar algo
+  if (loading) return null; // ou <Spinner /> se quiser mostrar algo
 
   return (
     <Routes>
+      {/* Public Route */}
       <Route path="/" element={<Login />} />
 
+      {/* Admin Routes */}
       <Route
         path="/admin"
         element={
@@ -49,70 +56,54 @@ function RotasProtegidas() {
         <Route path="competicoes" element={<Competicoes />} />
       </Route>
 
-      <Route
-        path="/atleta/basquetebol"
-        element={
-          <PrivateRoute allowedRoles={["Atleta Basquetebol"]}>
-            <AtletaBasquetebol />
-          </PrivateRoute>
-        }
-      />
-
+      {/* Atleta Routes */}
+      <Route path="/atleta/basquetebol" element={
+        <PrivateRoute allowedRoles={["Atleta Basquetebol"]}>
+          <AtletaBasquetebol />
+        </PrivateRoute>
+      } />
       <Route path="/atleta/hoquei/jogador" element={<AtletaHoqueiJogador />} />
       <Route path="/atleta/hoquei/guarda-redes" element={<AtletaHoqueiGR />} />
 
-      <Route
-  path="/treinador/hoquei-em-patins"
-  element={
-    <PrivateRoute allowedRoles={["Treinador Hóquei em Patins"]}> {/* ✅ Agora está certo */}
-      <TreinadorHoquei />
-    </PrivateRoute>
-  }
-/>
-      <Route
-        path="/treinador/basquetebol"
-        element={
-          <PrivateRoute allowedRoles={["Treinador Basquetebol"]}>
-            <TreinadorBasquetebol />
-          </PrivateRoute>
-        }
-      />
+      {/* Treinador Routes */}
+      <Route path="/treinador/hoquei-em-patins" element={
+        <PrivateRoute allowedRoles={["Treinador Hóquei em Patins"]}>
+          <TreinadorHoquei />
+        </PrivateRoute>
+      } />
+      <Route path="/treinador/basquetebol" element={
+        <PrivateRoute allowedRoles={["Treinador Basquetebol"]}>
+          <TreinadorBasquetebol />
+        </PrivateRoute>
+      } />
 
-      <Route
-        path="/analistas"
-        element={
-          <PrivateRoute allowedRoles={["Analista"]}>
-            <Analistas />
-          </PrivateRoute>
-        }
-      />
+      {/* Analistas Route */}
+      <Route path="/analistas" element={
+        <PrivateRoute allowedRoles={["Analista"]}>
+          <Analistas />
+        </PrivateRoute>
+      } />
 
-<Route
-  path="/fisioterapia"
-  element={
-    <PrivateRoute allowedRoles={["Fisioterapeuta"]}>
-      <Fisioterapia />
-    </PrivateRoute>
-  }
-/>
+      {/* Outras funções */}
+      <Route path="/fisioterapeuta" element={
+        <PrivateRoute allowedRoles={["Fisioterapeuta"]}>
+          <Fisioterapeuta />
+        </PrivateRoute>
+      } />
+      <Route path="/preparador-fisico" element={
+        <PrivateRoute allowedRoles={["Preparador Físico"]}>
+          <Preparadores />
+        </PrivateRoute>
+      } />
+      <Route path="/coordenador/hoquei" element={
+        <PrivateRoute allowedRoles={["Coordenador Hóquei"]}>
+          <CoordenadorHoquei />
+        </PrivateRoute>
+      } />
+      {/* NOVA PÁGINA */}
+      <Route path="/analise-2-divisao" element={<Analise2Divisao />} />
 
-<Route
-  path="/preparador-fisico"
-  element={
-    <PrivateRoute allowedRoles={["Preparador Físico"]}>
-      <Preparadores />
-    </PrivateRoute>
-  }
-/>
-
-<Route
-  path="/coordenadores"
-  element={
-    <PrivateRoute allowedRoles={["Coordenador Hóquei"]}>
-      <Coordenadores />
-    </PrivateRoute>
-  }
-/>
+      <Route path="/equipa/:id" element={<DetalheEquipa />} />
     </Routes>
   );
 }

@@ -40,12 +40,19 @@ function Login() {
       ? rawEscaloes.split(",").map((e: string) => e.trim())
       : [];
   
-    const userCorrigido = { ...user, escaloes: escaloesConvertidos };
-  
-    console.log("🔍 Utilizador encontrado no login:", userCorrigido);
-  
-    // Faz o login e espera o estado ser atualizado
-    login(userCorrigido);
+      const userCorrigido = { ...user, escaloes: escaloesConvertidos };
+
+      // ✅ Salvar perfilAtivo antes de fazer login
+      console.log("PERFIL ORIGINAL:", user.perfil);
+
+      const perfil = Array.isArray(user.perfil) ? user.perfil[0] : user.perfil;
+      localStorage.setItem("perfilAtivo", perfil);
+      
+      console.log("🔍 Utilizador encontrado no login:", userCorrigido);
+      
+      // ✅ Login no contexto
+      login(userCorrigido);
+      
   
     setTimeout(() => {
       const userGuardado = JSON.parse(localStorage.getItem("user") || "{}");
@@ -68,11 +75,12 @@ function Login() {
         case "Analista":
           return navigate("/analistas");
         case "Fisioterapeuta":
-          return navigate("/fisioterapia");
+          return navigate("/fisioterapeuta");
         case "Preparador Físico":
           return navigate("/preparador-fisico");
         case "Coordenador Hóquei":
-          return navigate("/coordenadores");
+          return navigate("/coordenador/hoquei");
+          
         case "Treinador Basquetebol":
           return navigate("/treinador/basquetebol");
         case "Treinador Hóquei em Patins":
